@@ -1,0 +1,49 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:5173"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+      routes:
+        - id: auth-service-route
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/api/auth/**, /api/images/**, /api/users/**
+
+        - id: booking-service-route
+          uri: lb://BOOKING-SERVICE
+          predicates:
+            - Path=/api/bookings/**, /api/tickets/**
+
+        - id: event-service-route
+          uri: lb://EVENT-SERVICE
+          predicates:
+            - Path=/api/events/**, /api/venues/**, /api/cities/**
+
+        - id: inventory-service-route
+          uri: lb://INVENTORY-SERVICE
+          predicates:
+            - Path=/api/inventories/**
+
+        - id: talent-service-route
+          uri: lb://TALENT-SERVICE
+          predicates:
+            - Path=/api/talent/**
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/

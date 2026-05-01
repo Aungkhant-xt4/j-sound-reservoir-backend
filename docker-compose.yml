@@ -1,0 +1,140 @@
+version: '3.8'
+
+services:
+  # --- INFRASTRUCTURE: DATABASE ---
+  mysql-db:
+    image: mysql:8.0
+    command: --default-time-zone="+00:00"
+    container_name: j-sound-mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: j_sound_reservior_db
+      MYSQL_ROOT_PASSWORD: root
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+    networks:
+      - j-sound-network
+
+  # --- INFRASTRUCTURE: DISCOVERY (EUREKA) ---
+  eureka-discovery-service:
+    build:
+      context: .
+      dockerfile: eureka-discovery-service/Dockerfile
+    container_name: eureka-service
+    ports:
+      - "8761:8761"
+    networks:
+      - j-sound-network
+
+  # --- INFRASTRUCTURE: GATEWAY ---
+  spring-cloud-gateway:
+    build:
+      context: .
+      dockerfile: spring-cloud-gateway/Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-discovery-service:8761/eureka/
+    depends_on:
+      - eureka-discovery-service
+    networks:
+      - j-sound-network
+
+  # --- MICROSERVICES ---
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: auth-service/Dockerfile
+    container_name: auth-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/j_sound_reservior_db
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-discovery-service:8761/eureka/
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+      eureka-discovery-service:
+        condition: service_started
+    networks:
+      - j-sound-network
+
+  event-service:
+    build:
+      context: .
+      dockerfile: event-service/Dockerfile
+    container_name: event-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/j_sound_reservior_db
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-discovery-service:8761/eureka/
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+      eureka-discovery-service:
+        condition: service_started
+    networks:
+      - j-sound-network
+
+  booking-service:
+    build:
+      context: .
+      dockerfile: booking-service/Dockerfile
+    container_name: booking-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/j_sound_reservior_db
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-discovery-service:8761/eureka/
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - j-sound-network
+
+  inventory-service:
+    build:
+      context: .
+      dockerfile: inventory-service/Dockerfile
+    container_name: inventory-service
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/j_sound_reservior_db
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-discovery-service:8761/eureka/
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - j-sound-network
+
+  talent-service:
+    build:
+      context: .
+      dockerfile: talent-service/Dockerfile
+    container_name: talent-service
+    ports:
+      - "8085:8085"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-db:3306/j_sound_reservior_db
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-discovery-service:8761/eureka/
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - j-sound-network
+
+networks:
+  j-sound-network:
+    driver: bridge
