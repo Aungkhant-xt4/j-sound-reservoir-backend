@@ -6,8 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.naming.ServiceUnavailableException;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ApiResponse<Void>> handleBadRequest(BadRequestException ex) {
         return ResponseEntity
@@ -37,6 +40,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.error(500, "An unexpected error occurred: " + ex.getMessage()));
+    }
+
+
+    @ExceptionHandler(ServiceUnavailableException.class)
+    public ResponseEntity<ApiResponse<Void>> handleServiceException(Exception ex) {
+        return ResponseEntity
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(ApiResponse.error(503, "Service: " + ex.getMessage()));
     }
 
     @ExceptionHandler(ExternalServiceException.class)

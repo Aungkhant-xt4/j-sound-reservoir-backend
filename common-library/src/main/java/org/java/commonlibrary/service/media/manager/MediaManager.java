@@ -15,7 +15,7 @@ public class MediaManager {
 
     public MediaManager(List<MediaStorage> mediaStorages) {
         for (MediaStorage storage : mediaStorages) {
-            storages.put(storage.getType(), storage);
+            storages.put(storage.getType().toLowerCase(), storage);
         }
     }
 
