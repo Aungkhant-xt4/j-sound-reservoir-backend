@@ -19,7 +19,7 @@
         </dependencies>
     </dependencyManagement>
     <groupId>org.java</groupId>
-    <artifactId>j-sound-reservior</artifactId>
+    <artifactId>j-sound-reservoir-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>j-sound-reservior</name>
