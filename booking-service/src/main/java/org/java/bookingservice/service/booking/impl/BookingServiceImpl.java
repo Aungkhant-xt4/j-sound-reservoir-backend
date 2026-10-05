@@ -11,7 +11,7 @@ import org.java.bookingservice.model.entity.Ticket;
 import org.java.bookingservice.repository.BookingLedgerRepository;
 import org.java.bookingservice.repository.BookingRepository;
 import org.java.bookingservice.repository.TicketRepository;
-import org.java.bookingservice.service.BookingService;
+import org.java.bookingservice.service.booking.BookingService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

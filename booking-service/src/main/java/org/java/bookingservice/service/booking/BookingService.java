@@ -1,8 +1,6 @@
-package org.java.bookingservice.service;
+package org.java.bookingservice.service.booking;
 
 import org.java.bookingservice.model.dto.CreateBookingRequest;
-
-import java.util.List;
 
 public interface BookingService {
     String processBooking(CreateBookingRequest request, Long currentUserId);

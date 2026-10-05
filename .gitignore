@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+/auth-service/.env
+/booking-service/.env
+/common-library/.env
+/event-service/.env
+/inventory-service/.env
+/talent-service/.env

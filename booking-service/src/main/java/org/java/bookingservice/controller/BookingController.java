@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.java.bookingservice.feignclient.AuthServiceClient;
 import org.java.bookingservice.model.dto.CreateBookingRequest;
-import org.java.bookingservice.service.BookingService;
+import org.java.bookingservice.service.booking.BookingService;
 import org.java.commonlibrary.model.dto.ApiResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

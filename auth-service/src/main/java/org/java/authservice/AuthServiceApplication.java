@@ -6,10 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.TimeZone;
 
-@SpringBootApplication(scanBasePackages = {
-        "org.java.authservice",
-        "org.java.commonlibrary"
-})
+@SpringBootApplication
 public class AuthServiceApplication {
 
     public static void main(String[] args) {

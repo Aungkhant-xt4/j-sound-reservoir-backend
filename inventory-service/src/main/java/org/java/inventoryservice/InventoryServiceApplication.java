@@ -8,10 +8,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 import java.util.TimeZone;
 
-@SpringBootApplication(scanBasePackages = {
-        "org.java.inventoryservice",
-        "org.java.commonlibrary"
-})
+@SpringBootApplication
 @EnableFeignClients(defaultConfiguration = FeignSecurityConfig.class)
 public class InventoryServiceApplication {
 
